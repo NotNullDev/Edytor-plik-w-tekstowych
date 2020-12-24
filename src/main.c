@@ -1,8 +1,19 @@
 #include "print.h"
+#include "words.h"
 
 int main(void)
 {
-    print();
+    Words words = initList();
+    addToList(words, "Item1 sdaf");
+    addToList(words, "Item2 sdaf");
+    addToList(words, "Item3 sdaf");
+    addToList(words, "Item4 sdaf");
+
+    printList(words);
+    addToList(words, "Item5 sdaf");
+    printList(words);
+    removeAllElements(words);
+    printList(words);
     return 0;
 }
 /*

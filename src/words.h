@@ -2,22 +2,26 @@
 #define WORDS_H 1
 
 #define WORDS_ERROR -1
-
+#include <stdlib.h>
+#include <stdio.h>
 typedef const char *String;
 
 typedef struct Element
 {
-    String element;
-    Element *next;
+    String value;
+    struct Element *next;
 } Element;
 
+/*
+    linked list of strings
+*/
 typedef Element *Words;
 
-/*
-    return amount of elements in list
-    retrun WORDS_ERROR on error
-*/
-int removeAllElements(Words words);
+void printList(Words w);
+
+Words initList();
+
+void removeAllElements(Words words);
 
 int removeAllBeginWith(Words words, String sentence);
 
@@ -25,6 +29,14 @@ int removeEqualLength(Words words, int elementLength);
 
 int removeLongerThan(Words words, int elementLength);
 
+/*
+    (next - previous - 1) elements will be deleted
+    example: 
+
+    insertBetween(["1","2","3","4","5"], "0", 0, 3) => ["1","0","4","5"]
+
+    ----
+*/
 int insertBetween(Words words, String element, int previous, int next);
 
 /*
@@ -40,7 +52,7 @@ int getLength(Words words);
 
 int removeByIndex(Words words, int index);
 
-int append(Words words, String string);
+void addToList(Words words, String string);
 
 void removeFirstElement(Words words);
 
