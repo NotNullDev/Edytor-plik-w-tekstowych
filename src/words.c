@@ -1,16 +1,18 @@
 #include "words.h"
 
+//done
 void addToList(Words words, String string)
 {
     if (!words)
     {
-        printf("Error: call initList() on list before adding any items.\n");
+        printf("Error: call initList() on object before adding any items.\n");
         return;
     }
 
     if (!words->value)
     {
         words->value = string;
+        words->next = NULL;
         return;
     }
 
@@ -25,6 +27,7 @@ void addToList(Words words, String string)
     current->next->next = NULL;
 }
 
+//done
 /*
     return empty linked list
 */
@@ -37,19 +40,63 @@ Words initList()
     return w;
 }
 
-void removeAllElements(Words words)
+/*
+    freeing list object - if it's not empty it's clear it first
+*/
+void freeWords(Words words)
 {
-
-    while (words->next != NULL)
+    int len = getLength(words);
+    if (!len)
     {
-        removeAllElements(words + 1);
+        free(words);
+        return;
     }
+    removeAllElements(words);
     free(words);
+    words = NULL;
 }
 
+/*
+    remove all elements of the list
+    this function DOES NOT list object - use deinit() instead
+    list becane empty
+*/
+void removeAllElements(Words words)
+{
+    int len, i;
+
+    len = getLength(words);
+
+    if (!len)
+        return;
+
+    Words toRemove[len];
+
+    toRemove[0] = words;
+
+    for (i = 1; i < len; i++)
+    {
+        toRemove[i] = toRemove[i - 1]->next;
+    }
+
+    for (i = len - 1; i >= 0; i--)
+    {
+        if (i == 0)
+        {
+            toRemove[i]->value = NULL;
+            toRemove[i]->next = NULL;
+            break;
+        }
+        free(toRemove[i]);
+    }
+}
+
+/*
+    after freeing list memory it makes program crash
+*/
 void printList(Words w)
 {
-    if (!w)
+    if (!w->value)
     {
         printf("No items in list.\n");
         return;
@@ -58,16 +105,23 @@ void printList(Words w)
     Words current = w;
     do
     {
+        if (current->value == NULL)
+            break;
         printf("item %d: %s\n", currentIndex++, current->value);
         current = current->next;
     } while (current);
 }
 
-int removeAllBeginWith(Words words, String sentence);
+void removeAllBeginWith(Words words, String sentence);
 
-int removeEqualLength(Words words, int elementLength);
+void removeEqualLength(Words words, int elementLength);
 
-int removeLongerThan(Words words, int elementLength);
+void removeLongerThan(Words words, int elementLength)
+{
+    Words *wordsArray;
+
+    wordsArray = wordsToArray(words);
+}
 
 /*
     (next - previous - 1) elements will be deleted
@@ -77,23 +131,75 @@ int removeLongerThan(Words words, int elementLength);
 
     ----
 */
-int insertBetween(Words words, String element, int previous, int next);
+void insertBetween(Words words, String element, int previous, int next)
+{
+    int len;
+    Words *wordsArray, newWord;
+
+    len = getLength(words);
+    if (previous < 0 || next < 0 || previous > next || previous == next || next > len - 1)
+        return;
+
+    newWord = (Words)malloc(sizeof(Words));
+    newWord->value = element;
+    wordsArray = wordsToArray(words);
+    wordsArray[previous]->next = newWord;
+    newWord->next = wordsArray[next];
+}
 
 /*
     sorting by alphabetical order
 */
-int sort(Words words);
+void sort(Words words);
 
-int sortByLength(Words Words);
+void sortByLength(Words Words);
 
 int replaceAll(Words words, String oldWord, String newWord);
 
-int getLength(Words words);
+//done
+int getLength(Words words)
+{
+    if (!words->value)
+        return 0;
+    int length = 1;
+    Words w = words->next;
+    while (w)
+    {
+        w = w->next;
+        length++;
+    }
+    return length;
+}
 
-int removeByIndex(Words words, int index);
+void removeByIndex(Words words, int index)
+{
+    Words *array;
+    int len;
 
-void removeFirstElement(Words words);
+    len = getLength(words);
+    if (index > len - 1)
+        return;
+    array = wordsToArray(words);
+    if (index = len - 1)
 
+        array[index - 1]->next = NULL;
+    else
+        array[index - 1]->next = array[index + 1];
+    free(array[index]);
+}
+
+void removeFirstElement(Words words)
+{
+    Words oldW;
+
+    oldW = words;
+
+    words = words->next;
+
+    free(oldW);
+}
+
+//done
 void removeLastElement(Words words)
 {
     if (!words)
@@ -112,4 +218,29 @@ void removeLastElement(Words words)
     }
 }
 
-void connect(Words a, Words b);
+void connect(Words a, Words b)
+{
+    if (!a || !b)
+        return;
+    Words last = a;
+    while (last->next)
+        last = last->next;
+    last->next = b;
+}
+
+Words *wordsToArray(Words words)
+{
+    int len;
+    Words currentWord, *wordsArray;
+
+    len = getLength(words);
+    wordsArray = (Words *)malloc(len * sizeof(Words));
+
+    currentWord = words;
+    for (int i = 0; i < len; i++)
+    {
+        wordsArray[i] = currentWord;
+        currentWord = currentWord->next;
+    }
+    return wordsArray;
+}

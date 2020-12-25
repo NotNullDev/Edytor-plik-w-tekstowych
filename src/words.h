@@ -21,13 +21,15 @@ void printList(Words w);
 
 Words initList();
 
+void freeWords(Words words);
+
 void removeAllElements(Words words);
 
-int removeAllBeginWith(Words words, String sentence);
+void removeAllBeginWith(Words words, String sentence);
 
-int removeEqualLength(Words words, int elementLength);
+void removeEqualLength(Words words, int elementLength);
 
-int removeLongerThan(Words words, int elementLength);
+void removeLongerThan(Words words, int elementLength);
 
 /*
     (next - previous - 1) elements will be deleted
@@ -37,20 +39,20 @@ int removeLongerThan(Words words, int elementLength);
 
     ----
 */
-int insertBetween(Words words, String element, int previous, int next);
+void insertBetween(Words words, String element, int previous, int next);
 
 /*
     sorting by alphabetical order
 */
-int sort(Words words);
+void sort(Words words);
 
-int sortByLength(Words Words);
+void sortByLength(Words Words);
 
 int replaceAll(Words words, String oldWord, String newWord);
 
 int getLength(Words words);
 
-int removeByIndex(Words words, int index);
+void removeByIndex(Words words, int index);
 
 void addToList(Words words, String string);
 
@@ -59,5 +61,10 @@ void removeFirstElement(Words words);
 void removeLastElement(Words words);
 
 void connect(Words a, Words b);
+
+/*
+    remember to free list after it's not important anymore
+*/
+Words *wordsToArray(Words words);
 
 #endif
