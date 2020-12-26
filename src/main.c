@@ -6,6 +6,7 @@ int main(void)
     Words words = initList();
     addToList(words, "Item0 sdaf");
     addToList(words, "Item1 sdaf");
+    addToList(words, "Item2 sdaf");
     printList(words);
     removeFirstElement(words);
 

@@ -188,15 +188,22 @@ void removeByIndex(Words words, int index)
     free(array[index]);
 }
 
+/*
+    copy first into second
+    delete second
+    now first is poiting to third and have value of second so,
+    value of first is gone and flow is kept
+*/
 void removeFirstElement(Words words)
 {
-    Words oldW;
-
-    oldW = words;
-
-    words = words->next;
-
-    free(oldW);
+    int len = getLength(words);
+    Words toDelete;
+    if (len < 2)
+        return;
+    toDelete = words->next;
+    words->value = words->next->value;
+    words->next = words->next->next;
+    free(toDelete);
 }
 
 //done
