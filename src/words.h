@@ -1,9 +1,10 @@
 #ifndef WORDS_H
 #define WORDS_H 1
 
-#define WORDS_ERROR -1
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 typedef const char *String;
 
 typedef struct Element
@@ -46,9 +47,9 @@ void insertBetween(Words words, String element, int previous, int next);
 */
 void sort(Words words);
 
-void sortByLength(Words Words);
+void sortByLength(Words words);
 
-int replaceAll(Words words, String oldWord, String newWord);
+void replaceAll(Words words, String oldWord, String newWord);
 
 int getLength(Words words);
 

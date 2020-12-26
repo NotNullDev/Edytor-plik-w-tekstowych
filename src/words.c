@@ -112,15 +112,136 @@ void printList(Words w)
     } while (current);
 }
 
-void removeAllBeginWith(Words words, String sentence);
-
-void removeEqualLength(Words words, int elementLength);
-
-void removeLongerThan(Words words, int elementLength)
+void removeAllBeginWith(Words words, String sentence)
 {
-    Words *wordsArray;
+    if (!words)
+        return;
+
+    Words *wordsArray, toRemove;
+    int len;
 
     wordsArray = wordsToArray(words);
+    len = getLength(words);
+
+    if (len < 1)
+        return;
+    for (int i = 0; i < len; i++)
+    {
+        while (!strncmp(wordsArray[i]->value, sentence, strlen(sentence)))
+        {
+            if (i == 0)
+            {
+                if (len == 1)
+                {
+
+                    removeAllElements(words);
+                    return;
+                }
+
+                removeFirstElement(words);
+                wordsArray = wordsToArray(words);
+                len--;
+                continue;
+            }
+            if (i == len - 1)
+            {
+                removeLastElement(words);
+                return;
+            }
+            toRemove = wordsArray[i];
+            wordsArray[i - 1]->next = wordsArray[i + 1];
+            free(toRemove);
+            wordsArray = wordsToArray(words);
+            len--;
+        }
+    }
+}
+
+void removeEqualLength(Words words, int elementLength)
+{
+    if (!words)
+        return;
+
+    Words *wordsArray, toRemove;
+    int len;
+
+    wordsArray = wordsToArray(words);
+    len = getLength(words);
+
+    if (len < 1)
+        return;
+    for (int i = 0; i < len; i++)
+    {
+        while (strlen(wordsArray[i]->value) == elementLength)
+        {
+            if (i == 0)
+            {
+                if (len == 1)
+                {
+
+                    removeAllElements(words);
+                    return;
+                }
+
+                removeFirstElement(words);
+                wordsArray = wordsToArray(words);
+                len--;
+                continue;
+            }
+            if (i == len - 1)
+            {
+                removeLastElement(words);
+                return;
+            }
+            toRemove = wordsArray[i];
+            wordsArray[i - 1]->next = wordsArray[i + 1];
+            free(toRemove);
+            wordsArray = wordsToArray(words);
+            len--;
+        }
+    }
+}
+void removeLongerThan(Words words, int elementLength)
+{
+    if (!words)
+        return;
+
+    Words *wordsArray, toRemove;
+    int len;
+
+    wordsArray = wordsToArray(words);
+    len = getLength(words);
+
+    if (len < 1)
+        return;
+    for (int i = 0; i < len; i++)
+    {
+        while (strlen(wordsArray[i]->value) > elementLength)
+        {
+            if (i == 0)
+            {
+                if (len == 1)
+                {
+                    removeAllElements(words);
+                    return;
+                }
+                removeFirstElement(words);
+                wordsArray = wordsToArray(words);
+                len--;
+                continue;
+            }
+            if (i == len - 1)
+            {
+                removeLastElement(words);
+                return;
+            }
+            toRemove = wordsArray[i];
+            wordsArray[i - 1]->next = wordsArray[i + 1];
+            free(toRemove);
+            wordsArray = wordsToArray(words);
+            len--;
+        }
+    }
 }
 
 /*
@@ -146,15 +267,125 @@ void insertBetween(Words words, String element, int previous, int next)
     wordsArray[previous]->next = newWord;
     newWord->next = wordsArray[next];
 }
+/*
+    ala
+    ben
 
+*/
+int cmpalpha(const void *a, const void *b)
+{
+    String first = (*(Words *)a)->value;
+    String second = (*(Words *)b)->value;
+    for (int i = 0; i < strlen(first); i++)
+    {
+        if (first[i] >= 'a' && first[i] <= 'z')
+        {
+            if (first[i] == second[i])
+            {
+                continue;
+            }
+            if (second[i] >= 'a' && second[i] <= 'z')
+            {
+                if (first[i] < second[i])
+                    return 1;
+                else
+                    return -1;
+            }
+            if (second[i] >= 'A' && second[i] <= 'Z')
+                return 1;
+            //if its sign then its lower
+            else
+                return -1;
+        }
+        else if (first[i] >= 'Z' && first[i] <= 'Z')
+        {
+            if (first[i] == second[i])
+            {
+                continue;
+            }
+            if (second[i] >= 'A' && second[i] <= 'Z')
+            {
+                if (first[i] < second[i])
+                    return 1;
+                else
+                    return -1;
+            }
+            // if (second[i] >= 'a' && second[i] <= 'z')
+            //     return -1;
+            // else
+            //     return -1
+            return -1;
+        }
+        else
+        {
+            if (first[i] == second[i])
+            {
+                continue;
+            }
+            if (first[i] > second[i])
+                return -1;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int cmpLength(const void *a, const void *b)
+{
+    return strcmp((*(Words *)a)->value, (*(Words *)b)->value);
+}
 /*
     sorting by alphabetical order
 */
-void sort(Words words);
+void sort(Words words)
+{
+    Words *wordsArray = wordsToArray(words);
+    int len = getLength(words);
+    Words current;
+    qsort(wordsArray, len, sizeof(Words), cmpalpha);
+    current = words;
+    for (int i = 0; i < len; i++)
+    {
+        current->value = wordsArray[i]->value;
+    }
+    free(wordsArray);
+}
 
-void sortByLength(Words Words);
+void sortByLength(Words words)
+{
+    Words *wordsArray = wordsToArray(words);
+    int len = getLength(words);
+    Words current;
+    qsort(wordsArray, len, sizeof(Words), cmpLength);
+    current = words;
+    for (int i = 0; i < len; i++)
+    {
+        current->value = wordsArray[i]->value;
+    }
+    free(wordsArray);
+}
 
-int replaceAll(Words words, String oldWord, String newWord);
+void replaceAll(Words words, String oldWord, String newWord)
+{
+    if (!words)
+        return;
+
+    Words *wordsArray, toRemove;
+    int len;
+
+    wordsArray = wordsToArray(words);
+    len = getLength(words);
+
+    if (len < 1)
+        return;
+    for (int i = 0; i < len; i++)
+    {
+        if (!strcmp(wordsArray[i]->value, oldWord))
+        {
+            wordsArray[i]->value = newWord;
+        }
+    }
+}
 
 //done
 int getLength(Words words)

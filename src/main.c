@@ -4,11 +4,22 @@
 int main(void)
 {
     Words words = initList();
-    addToList(words, "Item0 sdaf");
-    addToList(words, "Item1 sdaf");
-    addToList(words, "Item2 sdaf");
+    addToList(words, "12345");
+    addToList(words, "hehe");
+    addToList(words, "12345");
+    addToList(words, "12345");
+
+    // addToList(words, "12345");
+    // addToList(words, "Item0 sdaf");
+    // addToList(words, "12345");
+    // addToList(words, "Item1 sdaf");
+    // addToList(words, "12345");
+    // addToList(words, "12345");
+    // addToList(words, "Item2 sdaf");
+    // addToList(words, "12345");
+    // addToList(words, "12345");
     printList(words);
-    removeFirstElement(words);
+    removeAllBeginWith(words, "he");
 
     printList(words);
 
