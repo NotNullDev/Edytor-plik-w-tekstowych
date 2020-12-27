@@ -68,4 +68,6 @@ void connect(Words a, Words b);
 */
 Words *wordsToArray(Words words);
 
+String *wordsToStringsArray(Words words);
+
 #endif

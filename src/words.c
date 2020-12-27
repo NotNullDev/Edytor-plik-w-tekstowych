@@ -274,95 +274,107 @@ void insertBetween(Words words, String element, int previous, int next)
 */
 int cmpalpha(const void *a, const void *b)
 {
-    String first = (*(Words *)a)->value;
-    String second = (*(Words *)b)->value;
-    for (int i = 0; i < strlen(first); i++)
-    {
-        if (first[i] >= 'a' && first[i] <= 'z')
-        {
-            if (first[i] == second[i])
-            {
-                continue;
-            }
-            if (second[i] >= 'a' && second[i] <= 'z')
-            {
-                if (first[i] < second[i])
-                    return 1;
-                else
-                    return -1;
-            }
-            if (second[i] >= 'A' && second[i] <= 'Z')
-                return 1;
-            //if its sign then its lower
-            else
-                return -1;
-        }
-        else if (first[i] >= 'Z' && first[i] <= 'Z')
-        {
-            if (first[i] == second[i])
-            {
-                continue;
-            }
-            if (second[i] >= 'A' && second[i] <= 'Z')
-            {
-                if (first[i] < second[i])
-                    return 1;
-                else
-                    return -1;
-            }
-            // if (second[i] >= 'a' && second[i] <= 'z')
-            //     return -1;
-            // else
-            //     return -1
-            return -1;
-        }
-        else
-        {
-            if (first[i] == second[i])
-            {
-                continue;
-            }
-            if (first[i] > second[i])
-                return -1;
-            return 1;
-        }
-    }
-    return 0;
+    String first = *(String *)a;
+    String second = *(String *)b;
+    // for (int i = 0; i < strlen(first); i++)
+    // {
+    //     if (first[i] >= 'a' && first[i] <= 'z')
+    //     {
+    //         if (first[i] == second[i])
+    //         {
+    //             continue;
+    //         }
+    //         if (second[i] >= 'a' && second[i] <= 'z')
+    //         {
+    //             if (first[i] < second[i])
+    //                 return 1;
+    //             else
+    //                 return -1;
+    //         }
+    //         if (second[i] >= 'A' && second[i] <= 'Z')
+    //             return 1;
+    //         //if its sign then its lower
+    //         else
+    //             return -1;
+    //     }
+    //     else if (first[i] >= 'Z' && first[i] <= 'Z')
+    //     {
+    //         if (first[i] == second[i])
+    //         {
+    //             continue;
+    //         }
+    //         if (second[i] >= 'A' && second[i] <= 'Z')
+    //         {
+    //             if (first[i] < second[i])
+    //                 return 1;
+    //             else
+    //                 return -1;
+    //         }
+    //         // if (second[i] >= 'a' && second[i] <= 'z')
+    //         //     return -1;
+    //         // else
+    //         //     return -1
+    //         return -1;
+    //     }
+    //     else
+    //     {
+    //         if (first[i] == second[i])
+    //         {
+    //             continue;
+    //         }
+    //         if (first[i] > second[i])
+    //             return -1;
+    //         return 1;
+    //     }
+    // }
+    return strcmp(first, second);
 }
 
 int cmpLength(const void *a, const void *b)
 {
-    return strcmp((*(Words *)a)->value, (*(Words *)b)->value);
+    int arg1 = strlen(*(String *)a);
+    int arg2 = strlen(*(String *)b);
+
+    if (arg1 < arg2)
+        return -1;
+    else if (arg1 > arg2)
+        return 1;
+    else
+        return 0;
 }
 /*
     sorting by alphabetical order
 */
 void sort(Words words)
 {
-    Words *wordsArray = wordsToArray(words);
+    String *array;
     int len = getLength(words);
     Words current;
-    qsort(wordsArray, len, sizeof(Words), cmpalpha);
+    array = wordsToStringsArray(words);
+    qsort(array, len, sizeof(String), cmpalpha);
     current = words;
     for (int i = 0; i < len; i++)
     {
-        current->value = wordsArray[i]->value;
+        current->value = array[i];
+        current = current->next;
     }
-    free(wordsArray);
+    free(array);
 }
 
 void sortByLength(Words words)
 {
-    Words *wordsArray = wordsToArray(words);
+    String *array;
     int len = getLength(words);
     Words current;
-    qsort(wordsArray, len, sizeof(Words), cmpLength);
+    array = wordsToStringsArray(words);
+    qsort(array, len, sizeof(String), cmpLength);
     current = words;
     for (int i = 0; i < len; i++)
     {
-        current->value = wordsArray[i]->value;
+        current->value = array[i];
+        current = current->next;
     }
-    free(wordsArray);
+    free(array);
 }
 
 void replaceAll(Words words, String oldWord, String newWord)
@@ -479,6 +491,21 @@ Words *wordsToArray(Words words)
     {
         wordsArray[i] = currentWord;
         currentWord = currentWord->next;
+    }
+    return wordsArray;
+}
+
+String *wordsToStringsArray(Words words)
+{
+    String *wordsArray;
+    int len = getLength(words);
+    wordsArray = (String *)malloc(len * sizeof(String));
+    Words current;
+    current = words;
+    for (int i = 0; i < len; i++)
+    {
+        wordsArray[i] = current->value;
+        current = current->next;
     }
     return wordsArray;
 }
